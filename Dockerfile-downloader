@@ -1,0 +1,20 @@
+FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
+WORKDIR /app
+
+FROM microsoft/dotnet:2.1-sdk AS build
+WORKDIR /src
+COPY ["StealthMonitoring.NasaImages.Downloader/StealthMonitoring.NasaImages.Downloader.csproj", "StealthMonitoring.NasaImages.Downloader/"]
+COPY ["StealthMonitoring.Storage/StealthMonitoring.Storage.csproj", "StealthMonitoring.Storage/"]
+COPY ["StealthMonitoring.NasaImages.Api/StealthMonitoring.NasaImages.Api.csproj", "StealthMonitoring.NasaImages.Api/"]
+RUN dotnet restore "StealthMonitoring.NasaImages.Downloader/StealthMonitoring.NasaImages.Downloader.csproj"
+COPY . .
+WORKDIR "/src/StealthMonitoring.NasaImages.Downloader"
+RUN dotnet build "StealthMonitoring.NasaImages.Downloader.csproj" -c Release -o /app
+
+FROM build AS publish
+RUN dotnet publish "StealthMonitoring.NasaImages.Downloader.csproj" -c Release -o /app
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app .
+ENTRYPOINT ["dotnet", "StealthMonitoring.NasaImages.Downloader.dll"]

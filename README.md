@@ -102,9 +102,30 @@ There are explicit NUnit tests that measure time of parallel vs sequential image
 For a real production application, I'd also consider automated performance tests using NBench or something similar (if needed).
 
 ### Docker ###
-The applications are implemented using .NET Core 2.1, therefore, should be 
-able to run in Linux Docker containers.
+The applications are implemented using .NET Core 2.1 and therefore can run in Linux containers.
 
-For the image gallery, a shared file system volume will have to be used.
+I created two docker files in the root folder:
+- Dockerfile-downloader 
+- Dockerfile-webapp
 
-However, it's good only for testing purposes. More efficient options for BLOB storage are available.
+The one that builds and runs the web application is slightly trickier, because it has to include node.js to build the UI.
+
+### How to build the application in Docker ###
+The downloader and the UI back-end have to share the volume where the images will be stored.
+
+First, the volume needs to be created. Run `docker-create-volume.bat` and it will create a volume named "gallery".
+
+Then we need to update `appsettings.json` in both downloader an UI projects and set `"imageGalleryPath": "/gallery"`.
+
+Build containers for both applications:
+~~~~
+docker-build-webapp.bat
+docker-build-downloader.bat
+~~~~
+
+Now we can run them
+~~~~
+docker-run-downloader.bat 
+docker-run-webapp.bat 
+~~~~
+Use `localhost:8080` to access the web UI.

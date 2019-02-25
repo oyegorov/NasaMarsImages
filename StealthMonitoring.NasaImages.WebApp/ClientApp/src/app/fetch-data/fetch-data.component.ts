@@ -8,7 +8,7 @@ import {ActivatedRoute} from '@angular/router';
   templateUrl: './fetch-data.component.html'
 })
 export class FetchDataComponent implements OnInit, OnDestroy {
-  private date: Date;
+  public date: Date;
   private sub: any;
   private count;
   @ViewChild('ngxImageGallery') ngxImageGallery: NgxImageGalleryComponent;

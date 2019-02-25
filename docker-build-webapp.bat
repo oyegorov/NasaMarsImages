@@ -1,0 +1,1 @@
+docker build -t webapi:dev -f Dockerfile-webapp .
