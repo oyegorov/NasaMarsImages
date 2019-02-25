@@ -1,0 +1,14 @@
+<div *ngIf="date">
+  <h3 style="text-align: center">Curiosity Rover Images For {{ date | date:'longDate'}} ({{count}})</h3>
+
+  <ngx-image-gallery
+    #ngxImageGallery
+    [images]="images"
+    [conf]="conf"
+  >
+  </ngx-image-gallery>
+</div>
+
+<div *ngIf="!date">
+  <h3 style="text-align: center">Please Select The Date to See The Pictures</h3>
+</div>
